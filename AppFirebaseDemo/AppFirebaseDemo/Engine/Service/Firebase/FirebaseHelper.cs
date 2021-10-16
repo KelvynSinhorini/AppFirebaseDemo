@@ -1,8 +1,9 @@
 ﻿using Firebase.Auth;
+using Firebase.Database;
 using System;
 using System.Threading.Tasks;
 
-namespace AppFirebaseDemo.Service.Firebase
+namespace AppFirebaseDemo.Engine.Service.Firebase
 {
 	public static class FirebaseHelper
 	{
@@ -20,6 +21,40 @@ namespace AppFirebaseDemo.Service.Firebase
 
 		private static DateTime CurrentDateTime = DateTime.UtcNow;
 		public static FirebaseAuthLink MyFirebaseAuth = null;
+
+		#region Conector do firebase
+
+		private static FirebaseClient _Client;
+
+		public static FirebaseClient Client
+		{
+			get
+			{
+				if (_Client == null)
+				{
+					// CatalogarErroHelper.Mensagem("FireBaseHelper.Client.before");
+					if ((string.IsNullOrEmpty(FirebaseApiKey)) || (string.IsNullOrEmpty(FirebaseSignInEmail)) || (string.IsNullOrEmpty(FirebaseSignInPassword)))
+					{
+						_Client = new FirebaseClient(
+							baseUrl: FirebaseUrl,
+							options: new FirebaseOptions());
+					}
+					else
+					{
+						_Client = new FirebaseClient(
+							baseUrl: FirebaseUrl,
+							options: new FirebaseOptions()
+							{
+								AuthTokenAsyncFactory = () => GetAuth()
+							});
+					}
+					// CatalogarErroHelper.Mensagem("FireBaseHelper.Client.after");
+				}
+				return _Client;
+			}
+		}
+
+		#endregion
 
 		public static async Task<string> GetAuth(string SignInEmail = null)
 		{

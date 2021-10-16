@@ -1,4 +1,6 @@
-﻿using AppFirebaseDemo.Service.Firebase;
+﻿using AppFirebaseDemo.Engine.Service.Firebase;
+using AppFirebaseDemo.Service;
+using AppFirebaseDemo.Views;
 using ChavesSecretas;
 using System;
 using Xamarin.Forms;
@@ -14,7 +16,9 @@ namespace AppFirebaseDemo
 
 			Construir();
 
-			MainPage = new MainPage();
+			RegistrarInjecaoDependencia();
+
+			MainPage = new PessoasListPage();
 		}
 
 		protected override void OnStart()
@@ -27,6 +31,11 @@ namespace AppFirebaseDemo
 
 		protected override void OnResume()
 		{
+		}
+
+		private static void RegistrarInjecaoDependencia()
+		{
+			DependencyService.Register<PessoaDAO>();
 		}
 
 		private static void Construir()
